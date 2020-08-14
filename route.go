@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"log"
 	"net/http"
 	"net/url"
 	"path"
@@ -13,6 +12,7 @@ import (
 	"github.com/qor/qor"
 	"github.com/qor/qor/utils"
 	"github.com/qor/roles"
+	"github.com/rs/zerolog/log"
 )
 
 // Middleware is a way to filter a request and response coming into your application
@@ -252,6 +252,7 @@ func (serveMux *serveMux) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			}
 			context.RouteHandler = handler
 
+			log.Debug().Str("handler_path", handler.Path).Str("handler_config_resource_name", handler.Config.Resource.Name).Interface("handler_config_resource_name", handler.Config.Values).Msg("RouteHandler")
 			context.setResource(handler.Config.Resource)
 			if context.Resource == nil {
 				if matches := regexp.MustCompile(path.Join(admin.router.Prefix, `([^/]+)`)).FindStringSubmatch(req.URL.Path); len(matches) > 1 {
@@ -261,6 +262,16 @@ func (serveMux *serveMux) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			break
 		}
 	}
+
+	log.Debug().Str("request_uri", req.RequestURI).
+		Bool("handler_is_nil", context.RouteHandler == nil).
+		Str("host", req.Host).
+		Str("method", req.Method).
+		Interface("action", context.Action).
+		Interface("current_user", context.CurrentUser).
+		Strs("roles", context.Roles).
+		Str("resource_id", context.ResourceID).
+		Msg("Admin ServeMux")
 
 	// Call first middleware
 	for _, middleware := range admin.router.middlewares {
