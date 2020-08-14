@@ -12,6 +12,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/qor/responder"
+	"github.com/rs/zerolog/log"
 )
 
 // Controller admin controller
@@ -71,12 +72,14 @@ func (ac *Controller) New(context *Context) {
 
 // Create create data
 func (ac *Controller) Create(context *Context) {
+	log.Debug().Interface("action", context.Action).Interface("current_user", context.CurrentUser).Strs("roles", context.Roles).Str("resource_id", context.ResourceID).Msg("Controller Create")
 	res := context.Resource
 	status := http.StatusCreated
 	result := res.NewStruct()
 	if context.AddError(res.Decode(context.Context, result)); !context.HasError() {
 		context.AddError(res.CallSave(result, context.Context))
 	}
+	log.Debug().Interface("action", context.Action).Interface("current_user", context.CurrentUser).Strs("roles", context.Roles).Str("resource_id", context.ResourceID).Errs("errors", context.GetErrors()).Msg("Controller Create CallSave")
 
 	if context.HasError() {
 		responder.With("html", func() {

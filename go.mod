@@ -24,6 +24,7 @@ require (
 	github.com/qor/serializable_meta v0.0.0-20180510060738-5fd8542db417 // indirect
 	github.com/qor/session v0.0.0-20170907035918-8206b0adab70
 	github.com/qor/validations v0.0.0-20171228122639-f364bca61b46 // indirect
+	github.com/rs/zerolog v1.19.0
 	github.com/theplant/cldr v0.0.0-20190423050709-9f76f7ce4ee8
 	github.com/theplant/htmltestingutils v0.0.0-20190423050759-0e06de7b6967
 	github.com/theplant/testingutils v0.0.0-20190603093022-26d8b4d95c61
