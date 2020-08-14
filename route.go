@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 	"path"
@@ -252,7 +253,7 @@ func (serveMux *serveMux) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			}
 			context.RouteHandler = handler
 
-			log.Debug().Str("handler_path", handler.Path).Str("handler_config_resource_name", handler.Config.Resource.Name).Interface("handler_config_resource_name", handler.Config.Values).Msg("RouteHandler")
+			log.Debug().Str("handler_path", handler.Path).Str("handler", fmt.Sprintf("%#v", handler)).Msg("RouteHandler")
 			context.setResource(handler.Config.Resource)
 			if context.Resource == nil {
 				if matches := regexp.MustCompile(path.Join(admin.router.Prefix, `([^/]+)`)).FindStringSubmatch(req.URL.Path); len(matches) > 1 {
